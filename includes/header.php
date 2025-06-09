@@ -35,9 +35,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?php echo SITE_URL; ?>/login.php">Login</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo SITE_URL; ?>/register.php">Register</a>
-                        </li>
                     <?php endif; ?>
                 </ul>
             </div>
