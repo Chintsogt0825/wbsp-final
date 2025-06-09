@@ -66,24 +66,6 @@ footer {
     color: inherit;
 }
 
-.sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    width: 250px;
-    padding: 48px 0 0;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-}
-
-/* Push main content right when sidebar is fixed */
-@media (min-width: 768px) {
-    main {
-        margin-left: 250px;
-    }
-}
-
 /* Main content styles */
 main {
     padding-top: 1.5rem;
@@ -127,11 +109,111 @@ main {
         padding-top: 1rem;
     }
 }
+/* Course Cards */
+.course-card {
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.course-card .card-body {
+    flex-grow: 1;
+}
+
+/* Grade Colors */
+.grade-A {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.grade-B {
+    color: #17a2b8;
+    font-weight: bold;
+}
+
+.grade-C {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.grade-D {
+    color: #fd7e14;
+    font-weight: bold;
+}
+
+.grade-F {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Gradebook Table */
+.table-grades th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.table-grades td, .table-grades th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Fix for button clicks */
+.btn:focus {
+    box-shadow: none;
+}
+
+/* Ensure links work properly */
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.section-padding {
+        padding: 20px;
+    }
+
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
+/* Footer styles */
+.footer {
+    flex-shrink: 0;
+    width: 100%;
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: 250px;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+/* Push main content right when sidebar is fixed */
+@media (min-width: 768px) {
+    main {
+        margin-left: 250px;
+    }
+}
 @media (min-width: 768px) {
     nav.navbar .container {
         margin-left: 250px;
         max-width: calc(100% - 250px);
     }
 }
-
-
