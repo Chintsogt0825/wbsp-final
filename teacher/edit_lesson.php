@@ -36,7 +36,7 @@ if (!is_dir($upload_dir)) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = sanitizeInput($_POST['title']);
     $content = sanitizeInput($_POST['content']);
-    $file_path = $lesson['video_url']; // Reuse existing column for general file
+    $file_path = $lesson['file_name']; // Reuse existing column for general file
 
     if (!empty($_FILES['lesson_file']['name'])) {
         $file = $_FILES['lesson_file'];
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!isset($error)) {
-        $stmt = $pdo->prepare("UPDATE lessons SET title = ?, content = ?, video_url = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE lessons SET title = ?, content = ?, file_name = ? WHERE id = ?");
         if ($stmt->execute([$title, $content, $file_path, $lesson_id])) {
             $_SESSION['success'] = "Lesson updated successfully";
             redirect("view_course.php?id={$lesson['course_id']}");
@@ -75,10 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="alert alert-danger"><?= $error ?></div>
                 <?php endif; ?>
 
-                <?php if (!empty($lesson['video_url']) && file_exists('../' . $lesson['video_url'])): ?>
+                <?php if (!empty($lesson['file_name']) && file_exists('../' . $lesson['file_name'])): ?>
                     <div class="mb-3">
                         <label class="form-label">Current File:</label><br>
-                        <a href="../<?= $lesson['video_url'] ?>" target="_blank"><?= basename($lesson['video_url']) ?></a>
+                        <a href="../<?= $lesson['file_name'] ?>" target="_blank"><?= basename($lesson['file_name']) ?></a>
                     </div>
                 <?php endif; ?>
 
