@@ -26,7 +26,6 @@ require_once 'includes/header.php';
                     </div>
                     <button type="submit" name="login" class="btn btn-primary">Login</button>
                 </form>
-                <p class="mt-3">Don't have an account? <a href="register.php">Register here</a></p>
             </div>
         </div>
     </div>
