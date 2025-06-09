@@ -7,10 +7,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo SITE_URL; ?>/assets/css/style.css" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100"> <!-- FLEX LAYOUT APPLIED HERE -->
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="<?php echo SITE_URL; ?>"><?php echo SITE_NAME; ?></a>
+            <span class="navbar-brand mb-0 h1"><?php echo SITE_NAME; ?></span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -42,4 +43,5 @@
             </div>
         </div>
     </nav>
-    <div class="container mt-4"></div>
+
+    <div class="content-wrapper flex-grow-1"> <!-- Main content wrapper starts here -->
