@@ -113,11 +113,6 @@ $recent_courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <i class="fas fa-user me-2"></i>Profile
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="../index.php">
-                            <i class="fas fa-search me-2"></i>Browse Courses
-                        </a>
-                    </li>
                 </ul>
             </div>
         </nav>
