@@ -52,11 +52,6 @@ $activities = $pdo->query("
                             <i class="fas fa-chart-bar me-2"></i>Reports
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="settings.php">
-                            <i class="fas fa-cog me-2"></i>Settings
-                        </a>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -64,15 +59,11 @@ $activities = $pdo->query("
         <!-- Main Content -->
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Dashboard</h1>
+                <h1 class="h2">Admin Dashboard</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group me-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Today: <?= date('M j, Y') ?></button>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                        <span data-feather="calendar"></span>
-                        This week
-                    </button>
                 </div>
             </div>
 
@@ -187,9 +178,6 @@ $activities = $pdo->query("
                                 <a href="reports.php" class="btn btn-info mb-2">
                                     <i class="fas fa-chart-pie me-2"></i>View Reports
                                 </a>
-                                <a href="settings.php" class="btn btn-warning">
-                                    <i class="fas fa-cogs me-2"></i>System Settings
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -212,9 +200,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Sidebar toggle functionality
-    document.getElementById('sidebarCollapse').addEventListener('click', function() {
-        document.getElementById('sidebar').classList.toggle('active');
-    });
+    var sidebarToggle = document.getElementById('sidebarCollapse');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+    }
 });
 </script>
 
