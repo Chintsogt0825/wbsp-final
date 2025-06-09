@@ -6,7 +6,13 @@ checkRole(['admin']);
 $title = 'System Reports';
 require_once '../includes/header.php';
 
-// Get real-time statistical data
+// Update last_activity for the logged-in user (optional if not handled globally)
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("UPDATE users SET last_activity = NOW() WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+}
+
+// Fetch real-time statistics
 $stats = [
     'total_users' => getTotalUsers(),
     'total_visits' => getTotalVisits(),
@@ -44,19 +50,22 @@ function getTotalCourses() {
 
 function getVisitsLast30Days() {
     global $pdo;
-    $stmt = $pdo->query("SELECT visit_date, visit_count 
-                        FROM visits 
-                        WHERE visit_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-                        ORDER BY visit_date");
+    $stmt = $pdo->query("
+        SELECT DATE(visit_date) as visit_date, SUM(visit_count) as visit_count
+        FROM visits
+        WHERE visit_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        GROUP BY DATE(visit_date)
+        ORDER BY visit_date
+    ");
     $results = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-    
-    // Fill in missing dates with 0
+
+    // Fill missing dates with zero
     $data = [];
     for ($i = 29; $i >= 0; $i--) {
         $date = date('Y-m-d', strtotime("-$i days"));
         $data[$date] = $results[$date] ?? 0;
     }
-    
+
     return $data;
 }
 
@@ -128,7 +137,7 @@ function getUserRoleDistribution() {
                         <div class="card-body">
                             <h5 class="card-title">Total Courses</h5>
                             <h2 class="card-text"><?= number_format($stats['total_courses']) ?></h2>
-                            <small>Popular: <?= $stats['popular_courses'][0]['title'] ?? 'N/A' ?></small>
+                            <small>Popular: <?= htmlspecialchars($stats['popular_courses'][0]['title'] ?? 'N/A') ?></small>
                         </div>
                     </div>
                 </div>
