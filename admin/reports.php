@@ -6,19 +6,15 @@ checkRole(['admin']);
 $title = 'System Reports';
 require_once '../includes/header.php';
 
-// Update last_activity for the logged-in user (optional if not handled globally)
 if (isset($_SESSION['user_id'])) {
     $stmt = $pdo->prepare("UPDATE users SET last_activity = NOW() WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
 }
 
-// Fetch real-time statistics
 $stats = [
     'total_users' => getTotalUsers(),
-    'total_visits' => getTotalVisits(),
     'online_users' => getOnlineUsers(),
     'total_courses' => getTotalCourses(),
-    'visits_data' => getVisitsLast30Days(),
     'popular_courses' => getPopularCourses(),
     'user_roles' => getUserRoleDistribution()
 ];
@@ -27,12 +23,6 @@ function getTotalUsers() {
     global $pdo;
     $stmt = $pdo->query("SELECT COUNT(*) FROM users");
     return $stmt->fetchColumn();
-}
-
-function getTotalVisits() {
-    global $pdo;
-    $stmt = $pdo->query("SELECT SUM(visit_count) FROM visits");
-    return $stmt->fetchColumn() ?? 0;
 }
 
 function getOnlineUsers() {
@@ -46,27 +36,6 @@ function getTotalCourses() {
     global $pdo;
     $stmt = $pdo->query("SELECT COUNT(*) FROM courses");
     return $stmt->fetchColumn();
-}
-
-function getVisitsLast30Days() {
-    global $pdo;
-    $stmt = $pdo->query("
-        SELECT DATE(visit_date) as visit_date, SUM(visit_count) as visit_count
-        FROM visits
-        WHERE visit_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-        GROUP BY DATE(visit_date)
-        ORDER BY visit_date
-    ");
-    $results = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-
-    // Fill missing dates with zero
-    $data = [];
-    for ($i = 29; $i >= 0; $i--) {
-        $date = date('Y-m-d', strtotime("-$i days"));
-        $data[$date] = $results[$date] ?? 0;
-    }
-
-    return $data;
 }
 
 function getPopularCourses() {
@@ -90,7 +59,7 @@ function getUserRoleDistribution() {
 <div class="container-fluid">
     <div class="row">
         <?php include 'sidebar.php'; ?>
-        
+
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">System Reports</h1>
@@ -105,7 +74,7 @@ function getUserRoleDistribution() {
 
             <!-- Real-Time Stats Cards -->
             <div class="row mb-4">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card text-white bg-primary">
                         <div class="card-body">
                             <h5 class="card-title">Total Users</h5>
@@ -114,16 +83,7 @@ function getUserRoleDistribution() {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card text-white bg-success">
-                        <div class="card-body">
-                            <h5 class="card-title">Total Visits</h5>
-                            <h2 class="card-text"><?= number_format($stats['total_visits']) ?></h2>
-                            <small>Today: <?= $stats['visits_data'][date('Y-m-d')] ?? 0 ?></small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card text-white bg-warning">
                         <div class="card-body">
                             <h5 class="card-title">Active Now</h5>
@@ -132,7 +92,7 @@ function getUserRoleDistribution() {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="card text-white bg-info">
                         <div class="card-body">
                             <h5 class="card-title">Total Courses</h5>
@@ -143,20 +103,9 @@ function getUserRoleDistribution() {
                 </div>
             </div>
 
-            <!-- Real-Time Charts -->
+            <!-- User Distribution Chart -->
             <div class="row">
-                <div class="col-md-8">
-                    <div class="card mb-4">
-                        <div class="card-header d-flex justify-content-between">
-                            <h5>Daily Visits (Last 30 Days)</h5>
-                            <span class="badge bg-primary">Live</span>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="visitsChart" height="120"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
+                <div class="col-md-6 offset-md-3">
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5>User Distribution</h5>
@@ -168,6 +117,7 @@ function getUserRoleDistribution() {
                 </div>
             </div>
 
+            <!-- Popular Courses Table -->
             <div class="card mb-4">
                 <div class="card-header">
                     <h5>Most Popular Courses</h5>
@@ -215,32 +165,6 @@ function getUserRoleDistribution() {
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Visits Chart
-new Chart(document.getElementById('visitsChart').getContext('2d'), {
-    type: 'bar',
-    data: {
-        labels: <?= json_encode(array_keys($stats['visits_data'])) ?>,
-        datasets: [{
-            label: 'Visits',
-            data: <?= json_encode(array_values($stats['visits_data'])) ?>,
-            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-            borderColor: 'rgba(54, 162, 235, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        },
-        animation: {
-            duration: 1000
-        }
-    }
-});
-
 // User Distribution Chart
 new Chart(document.getElementById('usersChart').getContext('2d'), {
     type: 'doughnut',
