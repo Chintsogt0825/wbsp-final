@@ -94,7 +94,7 @@ $recent_courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="courses.php">
+                        <a class="nav-link text-white" href="my_courses.php">
                             <i class="fas fa-book me-2"></i>My Courses
                         </a>
                     </li>
@@ -140,7 +140,8 @@ $recent_courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                                 <i class="fas fa-book fa-3x"></i>
                             </div>
-                            <a href="courses.php" class="text-white small">View All</a>
+                            <a href="my_courses.php" class="text-white small">View All</a>
+
                         </div>
                     </div>
                 </div>
@@ -262,7 +263,6 @@ $recent_courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
-                                <a href="courses.php" class="btn btn-primary mt-3">View All Courses</a>
                             <?php endif; ?>
                         </div>
                     </div>
