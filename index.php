@@ -22,25 +22,6 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <h5 class="card-title"><?php echo $course['title']; ?></h5>
                             <h6 class="card-subtitle mb-2 text-muted">By <?php echo $course['teacher_name']; ?></h6>
                             <p class="card-text"><?php echo substr($course['description'], 0, 100) . '...'; ?></p>
-                            <?php if (isLoggedIn() && $_SESSION['role'] == 'student'): ?>
-                                <?php
-                                // Check if student is enrolled
-                                $stmt = $pdo->prepare("SELECT id FROM enrollments WHERE student_id = ? AND course_id = ?");
-                                $stmt->execute([$_SESSION['user_id'], $course['id']]);
-                                $enrolled = $stmt->fetch();
-                                ?>
-                                <?php if ($enrolled): ?>
-                                    <span class="badge bg-success">Enrolled</span>
-                                    <a href="student/courses.php?id=<?php echo $course['id']; ?>" class="btn btn-sm btn-primary">Go to Course</a>
-                                <?php else: ?>
-                                    <form method="POST" action="enroll.php">
-                                        <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
-                                        <button type="submit" class="btn btn-sm btn-success">Enroll Now</button>
-                                    </form>
-                                <?php endif; ?>
-                            <?php elseif (!isLoggedIn()): ?>
-                                <a href="login.php" class="btn btn-sm btn-primary">Login to Enroll</a>
-                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
