@@ -26,12 +26,12 @@ if (!$course) {
 // Get teacher info
 $teacher = getUserById($course['teacher_id']);
 
-// Get lessons for this course
+// Get lessons
 $stmt = $pdo->prepare("SELECT * FROM lessons WHERE course_id = ? ORDER BY created_at");
 $stmt->execute([$course_id]);
 $lessons = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Get assignments for this course
+// Get assignments
 $stmt = $pdo->prepare("SELECT a.*, s.grade FROM assignments a LEFT JOIN submissions s ON a.id = s.assignment_id AND s.student_id = ? WHERE a.course_id = ? ORDER BY a.due_date");
 $stmt->execute([$student_id, $course_id]);
 $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h2><?php echo $course['title']; ?></h2>
         <p>Teacher: <?php echo $teacher['full_name']; ?></p>
         <p><?php echo $course['description']; ?></p>
-        
+
         <div class="row mt-4">
             <div class="col-md-6">
                 <div class="card">
@@ -56,13 +56,26 @@ $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <ul class="list-group">
                                 <?php foreach ($lessons as $lesson): ?>
                                     <li class="list-group-item">
-                                        <h6><?php echo $lesson['title']; ?></h6>
-                                        <?php if ($lesson['video_url']): ?>
-                                            <div class="ratio ratio-16x9 my-3">
-                                                <iframe src="<?php echo $lesson['video_url']; ?>" allowfullscreen></iframe>
-                                            </div>
+                                        <h6><?php echo htmlspecialchars($lesson['title']); ?></h6>
+
+                                        <?php if (!empty($lesson['file_name'])): ?>
+                                            <?php
+                                                $file_name = htmlspecialchars($lesson['file_name']);
+                                                $file_url = "/lms/" . $file_name;
+                                                $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+                                                $embed_extensions = ['pdf', 'mp4', 'jpg', 'jpeg', 'png', 'webp'];
+                                            ?>
+
+                                            <?php if (in_array($ext, $embed_extensions)): ?>
+                                                <div class="ratio ratio-16x9 my-3">
+                                                    <iframe src="<?php echo $file_url; ?>" allowfullscreen></iframe>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <a href="<?php echo $file_url; ?>" class="btn btn-sm btn-success mt-2" target="_blank">Download Material</a>
                                         <?php endif; ?>
-                                        <p><?php echo $lesson['content']; ?></p>
+
+                                        <p class="mt-2"><?php echo nl2br(htmlspecialchars($lesson['content'])); ?></p>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
@@ -70,7 +83,7 @@ $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
@@ -83,10 +96,15 @@ $assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <ul class="list-group">
                                 <?php foreach ($assignments as $assignment): ?>
                                     <li class="list-group-item">
-                                        <h6><?php echo $assignment['title']; ?></h6>
-                                        <p><?php echo $assignment['description']; ?></p>
+                                        <h6><?php echo htmlspecialchars($assignment['title']); ?></h6>
+                                        <p><?php echo nl2br(htmlspecialchars($assignment['description'])); ?></p>
                                         <small>Due: <?php echo date('M j, Y', strtotime($assignment['due_date'])); ?></small>
-                                        
+
+                                        <?php if (!empty($assignment['file_name'])): ?>
+                                            <br>
+                                            <a href="/lms/<?php echo htmlspecialchars($assignment['file_name']); ?>" class="btn btn-sm btn-info mt-2" target="_blank">Download Assignment</a>
+                                        <?php endif; ?>
+
                                         <?php if (isset($assignment['grade'])): ?>
                                             <div class="alert alert-info mt-2">
                                                 <strong>Submitted</strong>
