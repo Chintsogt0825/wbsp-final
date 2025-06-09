@@ -83,7 +83,7 @@ $recent_courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-success sidebar collapse">
             <div class="position-sticky pt-3">
                 <div class="text-center mb-4">
-                    <img src="../assets/images/avatar_student.png" class="rounded-circle" width="80" alt="Student Avatar">
+                    <img src="../assets/images/student.jpg" class="rounded-circle" width="80" alt="Student Avatar">
                     <h5 class="mt-2 text-white"><?= $_SESSION['full_name'] ?></h5>
                     <p class="text-white-50 small">Student</p>
                 </div>

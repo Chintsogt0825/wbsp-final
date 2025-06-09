@@ -68,7 +68,7 @@ $upcoming_assignments = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-primary sidebar collapse">
             <div class="position-sticky pt-3">
                 <div class="text-center mb-4">
-                    <img src="../assets/images/avatar.png" class="rounded-circle" width="80" alt="Teacher Avatar">
+                    <img src="../assets/images/teacher.jpg" class="rounded-circle" width="80" alt="Teacher Avatar">
                     <h5 class="mt-2 text-white"><?= $_SESSION['full_name'] ?></h5>
                     <p class="text-white-50 small">Teacher</p>
                 </div>
